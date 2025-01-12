@@ -63,10 +63,15 @@ Más información sobre esta arquitectura se puede consultar en [Documentación 
 
 ### 2. Flujo de Datos (Dataflow)
 Se diseñó un **Dataflow** para transformar la fuente `games`:
+
+![Descripción de la imagen](images/Imagen36.png)
+
 1. **Filtrado:** Filtrar la columna `GAME_DATA_SET`.
-  ![Descripción de la imagen](images/Imagen3.png)
-3. **Ordenamiento:** Ordenar los datos de manera ascendente por la misma columna.
-4. **Carga:** Almacenar los datos transformados en el contenedor `landing`.
+
+![Descripción de la imagen](images/Imagen3.png)
+
+2. **Ordenamiento:** Ordenar los datos de manera ascendente por la misma columna.
+3. **Carga:** Almacenar los datos transformados en el contenedor `landing`.
 
 ---
 
@@ -75,7 +80,15 @@ Se implementaron dos **pipelines**:
 - Uno para ejecutar el **Dataflow**.
 - Otro para mover datos desde el contenedor `nba` hacia la capa `landing`.
 
+![Descripción de la imagen](images/Imagen5.png)
+
+![Descripción de la imagen](images/Imagen6.png)
+
 El pipeline `ingestión_nba_data` está parametrizado para recibir el nombre de la fuente deseada, asegurando flexibilidad en la ejecución.
+
+![Descripción de la imagen](images/Imagen7.png)
+
+![Descripción de la imagen](images/Imagen8.png)
 
 ---
 
@@ -97,27 +110,60 @@ La herramienta **Jupyter Notebook** se utilizó para simular operaciones propias
 
 ## Proceso de Conformance y Curated
 
+A partir de este punto se hace uso de Jupyter Notebook como principal herramienta, emulando en la medida posible lo que podríamos hacer con Databricks.
+
+# Estructura de Carpetas
+
+- Se construye la siguiente estructura de folders:
+  
+- El folder **`ingest_layer`** contiene los notebooks correspondientes a **`conformance`** y **`curated`**:
+
+![Descripción de la imagen](images/Imagen11.png)
+
+- **`business_layer`** contiene los notebooks correspondientes a la capa **`work`**:
+
+- ![Descripción de la imagen](images/Imagen12.png)
+
+- En cada una de las carpetas de las **capas** se encuentran los notebooks para cada archivo y una carpeta **`logs`** donde se registran las excepciones, errores y procesos exitosos:
+
+![Descripción de la imagen](images/Imagen13.png)
+
+- El folder **`catalogo`** simula lo que sería un catálogo de Databricks, en el cual se van almacenando las fuentes en las diferentes capas:
+
+![Descripción de la imagen](images/Imagen14.png)
+
 ### Conformance Layer
 En esta fase, el propósito principal de los notebooks es:
 
 1. **Lectura de Datos:** Leer los archivos directamente del Data Lake.
-2. **Definición de Esquema:** Establecer un esquema fijo, definiendo los tipos de datos más adecuados para cada variable.
-3. **Parsing y Validación:** Realizar un parsing para garantizar la consistencia y validez de los datos.
+
+![Descripción de la imagen](images/Imagen34.png)
+
+> **Nota:** Se encriptan las credenciales con el uso de "os".
+3. **Definición de Esquema:** Establecer un esquema fijo, definiendo los tipos de datos más adecuados para cada variable.
+
+![Descripción de la imagen](images/Imagen18.png)
+
+4. **Renombramientos:** Realizar un ejercicio de renombramientos si aplica.
+
+![Descripción de la imagen](images/Imagen19.png)
 
 Ejemplo del procesamiento en la capa **Conformance**:
 
 - Se lee el archivo del contenedor correspondiente.
 - Se define un esquema fijo para la tabla.
 - Se registran logs con detalles de las ejecuciones exitosas y errores.
-  
-A continuación, los datos procesados se escriben en la capa **Curated** del Data Lake.
 
-```plaintext
+  ```plaintext
 Estructura de Logs:
 - Hora de ejecución
 - Resultado del proceso
 - Detalle de errores
 ```
+
+A continuación, los datos procesados se escriben en la capa **Curated** del Data Lake.
+
+
     
 ---
 
