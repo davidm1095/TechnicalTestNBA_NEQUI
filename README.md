@@ -1,4 +1,4 @@
-# ThechnicalTestNq
+# ThechnicalTest
 Datos históricos NBA
 
 # Documentación del Proyecto: Arquitectura de Procesamiento de Datos con Azure, Jupyter Notebook y Power BI
