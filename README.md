@@ -1,7 +1,7 @@
 # ThechnicalTestNq
 Datos históricos NBA
 
-# Documentación del Proyecto: Arquitectura de Procesamiento de Datos con Azure y Power BI
+# Documentación del Proyecto: Arquitectura de Procesamiento de Datos con Azure, Jupyter Notebook y Power BI
 
 ## Descripción General
 Esta solución fue desarrollada utilizando tecnologías de **Azure Data Lake**, **Azure Data Factory**, y **Jupyter Notebook**, emulando un comportamiento similar al que podría desarrollarse en **Databricks**. Además, **Power BI Desktop** se utilizó para disponibilizar las fuentes de datos y construir el modelo analítico. 
@@ -11,9 +11,128 @@ El proyecto emplea **Python** como lenguaje de programación principal, junto co
 ---
 
 ## Fuente de Datos
-El conjunto de datos fue extraído del repositorio público de **Kaggle Datasets** y consta de 5 archivos en formato CSV que contienen información sobre juegos de la **NBA (National Basketball Association)**. Estos archivos se almacenaron en un contenedor de **Azure Data Lake** denominado `nba`.
+El conjunto de datos fue extraído del repositorio público de **Kaggle Datasets** y consta de 5 archivos en formato CSV que contienen información sobre juegos de la **NBA (National Basketball Association)**. Estos archivos se almacenaron en un contenedor de **Azure Data Lake** denominado `nba`, se selecciono esta fuente debido a su facilidad para el entendimiento y exploración y de esta manera poder dedicar mayor tiempo a la solución del ejercicio.
 
 ![Descripción de la imagen](images/Imagen1.png)
+
+## Descripción de Fuentes
+
+- **games.csv**: Todos los partidos desde la temporada 2004 hasta la última actualización, incluyendo la fecha, los equipos y algunos detalles como el número de puntos, etc.
+- **games_details.csv**: Detalles del conjunto de datos de juegos, contiene todas las estadísticas de los jugadores para un juego determinado.
+- **players.csv**: Datos de los jugadores (nombre).
+- **ranking.csv**: Clasificación de la NBA para un día determinado, dividida en oeste y este en la columna `CONFERENCE`.
+- **teams.csv**: Todos los equipos de la NBA.
+
+## Diccionario de Datos
+
+## Tabla `games`
+| **Campo**           | **Descripción**                                                      | **Tipo de Dato** |
+|----------------------|----------------------------------------------------------------------|------------------|
+| `GAME_DATE_EST`      | Fecha del juego en formato EST.                                      | Date             |
+| `GAME_ID`            | Identificador único del juego.                                      | Integer          |
+| `GAME_STATUS_TEXT`   | Estado del juego (e.g., Final, En progreso).                        | String           |
+| `HOME_TEAM_ID`       | Identificador del equipo local.                                     | Integer          |
+| `VISITOR_TEAM_ID`    | Identificador del equipo visitante.                                 | Integer          |
+| `SEASON`             | Temporada del juego.                                               | Integer          |
+| `TEAM_ID_home`       | Identificador del equipo local.                                     | Integer          |
+| `PTS_home`           | Puntos anotados por el equipo local.                                | Integer          |
+| `FG_PCT_home`        | Porcentaje de tiros de campo del equipo local.                      | Float            |
+| `FT_PCT_home`        | Porcentaje de tiros libres del equipo local.                        | Float            |
+| `FG3_PCT_home`       | Porcentaje de tiros de tres del equipo local.                       | Float            |
+| `AST_home`           | Asistencias realizadas por el equipo local.                        | Integer          |
+| `REB_home`           | Rebotes tomados por el equipo local.                               | Integer          |
+| `TEAM_ID_away`       | Identificador del equipo visitante.                                 | Integer          |
+| `PTS_away`           | Puntos anotados por el equipo visitante.                           | Integer          |
+| `FG_PCT_away`        | Porcentaje de tiros de campo del equipo visitante.                 | Float            |
+| `FT_PCT_away`        | Porcentaje de tiros libres del equipo visitante.                   | Float            |
+| `FG3_PCT_away`       | Porcentaje de tiros de tres del equipo visitante.                  | Float            |
+| `AST_away`           | Asistencias realizadas por el equipo visitante.                    | Integer          |
+| `REB_away`           | Rebotes tomados por el equipo visitante.                           | Integer          |
+| `HOME_TEAM_WINS`     | Indica si el equipo local ganó (1: sí, 0: no).                     | Boolean          |
+
+---
+
+## Tabla `games_details`
+| **Campo**           | **Descripción**                                                      | **Tipo de Dato** |
+|----------------------|----------------------------------------------------------------------|------------------|
+| `GAME_ID`            | Identificador único del juego.                                      | Integer          |
+| `TEAM_ID`            | Identificador único del equipo.                                     | Integer          |
+| `TEAM_ABBREVIATION`  | Abreviatura del equipo.                                             | String           |
+| `TEAM_CITY`          | Ciudad del equipo.                                                  | String           |
+| `PLAYER_ID`          | Identificador único del jugador.                                    | Integer          |
+| `PLAYER_NAME`        | Nombre completo del jugador.                                        | String           |
+| `NICKNAME`           | Apodo del jugador.                                                 | String           |
+| `START_POSITION`     | Posición inicial del jugador.                                       | String           |
+| `COMMENT`            | Comentarios adicionales sobre el jugador.                          | String           |
+| `MIN`                | Minutos jugados.                                                   | String           |
+| `FGM`                | Tiros de campo encestados.                                          | Float            |
+| `FGA`                | Tiros de campo intentados.                                          | Float            |
+| `FG_PCT`             | Porcentaje de tiros de campo encestados.                           | Float            |
+| `FG3M`               | Tiros de tres puntos encestados.                                   | Float            |
+| `FG3A`               | Tiros de tres puntos intentados.                                   | Float            |
+| `FG3_PCT`            | Porcentaje de tiros de tres encestados.                            | Float            |
+| `FTM`                | Tiros libres encestados.                                           | Float            |
+| `FTA`                | Tiros libres intentados.                                           | Float            |
+| `FT_PCT`             | Porcentaje de tiros libres encestados.                             | Float            |
+| `OREB`               | Rebotes ofensivos.                                                 | Float            |
+| `DREB`               | Rebotes defensivos.                                                | Float            |
+| `REB`                | Rebotes totales.                                                  | Float            |
+| `AST`                | Asistencias realizadas.                                            | Float            |
+| `STL`                | Robos de balón realizados.                                         | Float            |
+| `BLK`                | Bloqueos realizados.                                               | Float            |
+| `TO`                 | Pérdidas de balón.                                                | Float            |
+| `PF`                 | Faltas personales.                                                 | Float            |
+| `PTS`                | Puntos anotados.                                                  | Float            |
+| `PLUS_MINUS`         | Estadística +/- del jugador en el juego.                           | Float            |
+
+---
+
+## Tabla `players`
+| **Campo**      | **Descripción**                         | **Tipo de Dato** |
+|-----------------|-----------------------------------------|------------------|
+| `PLAYER_NAME`  | Nombre completo del jugador.            | String           |
+| `TEAM_ID`      | Identificador único del equipo.         | Integer          |
+| `PLAYER_ID`    | Identificador único del jugador.        | Integer          |
+| `SEASON`       | Temporada en la que jugó el jugador.    | Integer          |
+
+---
+
+## Tabla `ranking`
+| **Campo**       | **Descripción**                                 | **Tipo de Dato** |
+|------------------|-------------------------------------------------|------------------|
+| `TEAM_ID`       | Identificador único del equipo.                 | Integer          |
+| `LEAGUE_ID`     | Identificador único de la liga.                 | Integer          |
+| `SEASON_ID`     | Identificador único de la temporada.            | Integer          |
+| `STANDINGSDATE` | Fecha de la clasificación.                      | Date             |
+| `CONFERENCE`    | Conferencia a la que pertenece el equipo.       | String           |
+| `TEAM`          | Nombre del equipo.                              | String           |
+| `G`             | Número de juegos jugados.                       | Integer          |
+| `W`             | Número de juegos ganados.                       | Integer          |
+| `L`             | Número de juegos perdidos.                      | Integer          |
+| `W_PCT`         | Porcentaje de juegos ganados.                   | Float            |
+| `HOME_RECORD`   | Récord de juegos en casa.                       | String           |
+| `ROAD_RECORD`   | Récord de juegos como visitante.                | String           |
+| `RETURNTOPLAY`  | Indica si el equipo regresó a jugar.            | String           |
+
+---
+
+## Tabla `teams`
+| **Campo**           | **Descripción**                               | **Tipo de Dato** |
+|----------------------|-----------------------------------------------|------------------|
+| `LEAGUE_ID`          | Identificador único de la liga.              | Integer          |
+| `TEAM_ID`            | Identificador único del equipo.              | Integer          |
+| `MIN_YEAR`           | Año mínimo en el que el equipo participó.    | Integer          |
+| `MAX_YEAR`           | Año máximo en el que el equipo participó.    | Integer          |
+| `ABBREVIATION`       | Abreviatura del equipo.                      | String           |
+| `NICKNAME`           | Apodo del equipo.                            | String           |
+| `YEARFOUNDED`        | Año de fundación del equipo.                 | Integer          |
+| `CITY`               | Ciudad del equipo.                           | String           |
+| `ARENA`              | Nombre de la arena donde juega el equipo.    | String           |
+| `ARENACAPACITY`      | Capacidad de la arena.                       | Integer          |
+| `OWNER`              | Propietario del equipo.                      | String           |
+| `GENERALMANAGER`     | Gerente general del equipo.                  | String           |
+| `HEADCOACH`          | Entrenador principal del equipo.             | String           |
+| `DLEAGUEAFFILIATION` | Afiliación de la liga de desarrollo.         | String           |
 
 
 ---
@@ -154,18 +273,19 @@ Ejemplo del procesamiento en la capa **Conformance**:
 - Se define un esquema fijo para la tabla.
 - Se registran logs con detalles de las ejecuciones exitosas y errores.
 
-  ```plaintext
+```plaintext
 Estructura de Logs:
 - Hora de ejecución
 - Resultado del proceso
 - Detalle de errores
 ```
+![Descripción de la imagen](images/Imagen21.png)
+
+![Descripción de la imagen](images/Imagen22.png)
 
 A continuación, los datos procesados se escriben en la capa **Curated** del Data Lake.
 
-
-    
----
+![Descripción de la imagen](images/Imagen37.png)
 
 ## Curated Layer
 El propósito de los notebooks en la capa **Curated** es garantizar la limpieza y calidad de los datos. Se aplican reglas específicas para transformar y depurar las fuentes antes de moverlas a la siguiente capa (**Work**).
@@ -175,16 +295,25 @@ El propósito de los notebooks en la capa **Curated** es garantizar la limpieza 
 1. **Transformaciones Generales:**
    - Para todas las fuentes, se convierten las cadenas de texto a mayúsculas.
    - Eliminación de duplicados.
+     
+![Descripción de la imagen](images/Imagen23.png)
 
 2. **Tabla `games`:**
    - Se eliminan duplicados en la columna `GAME_ID`.
+  
+![Descripción de la imagen](images/Imagen24.png)
+
    - Se extraen las columnas `YEAR`, `MONTH` y `DAY` de la columna `GAME_DATE_EST`.
+
+![Descripción de la imagen](images/Imagen25.png)
 
 3. **Tabla `games_details`:**
    - Limpieza de la columna `MIN` (minutos de juego):
      - Valores no numéricos se reemplazan por `NaN` utilizando `numpy`.
      - Conversión de la columna a tipo `float`.
      - Creación de una nueva columna derivada llamada `MINFLOAT`, que será utilizada para construir medidas calculadas.
+
+![Descripción de la imagen](images/Imagen26.png)
 
 4. **Otras Transformaciones:**
    - Las transformaciones específicas de las demás fuentes están documentadas en los notebooks correspondientes.
@@ -201,6 +330,12 @@ En la capa **Work**, se aplican reglas de negocio y operaciones necesarias para 
 1. **Definición de Reglas de Negocio:**
    - Se crean columnas calculadas adicionales según los requerimientos del modelo de datos.
 
+![Descripción de la imagen](images/Imagen27.png)
+
+![Descripción de la imagen](images/Imagen28.png)
+
+![Descripción de la imagen](images/Imagen29.png)
+
 2. **Uniones y Consolidación:**
    - Se relacionan datos entre tablas para formar dimensiones y tablas de hechos.
 
@@ -212,17 +347,23 @@ En la capa **Work**, se aplican reglas de negocio y operaciones necesarias para 
 ## Consumo en Power BI Desktop
 En esta última etapa, se conectan las tablas procesadas en la capa **Work** a Power BI Desktop para construir el modelo de datos y facilitar su análisis.
 
+![Descripción de la imagen](images/Imagen30.png)
+
 ### Modelo de Datos en Power BI
 - **Estructura del Modelo:**
-  - Tablas de hechos: `games_details`.
-  - Dimensiones: `teams`, `players`, `coaches`, entre otras.
+  - Tablas de hechos: `FactGamesDetails`, `FactGames`, `FactRanking`.
+  - Dimensiones: `DimTeams`, `DimPlayers`.
+
+![Descripción de la imagen](images/Imagen31.png)
 
 - **Optimización del Modelo:**
   - Se establecen relaciones entre las tablas.
   - Se crean medidas calculadas para facilitar el análisis.
 
+![Descripción de la imagen](images/Imagen32.png)
+
 ### Visualización
-- El modelo diseñado permite obtener insights clave sobre los datos de la NBA mediante dashboards y reportes interactivos.
+- El modelo diseñado permite ser utilizado para obtener insights clave sobre los datos de la NBA mediante dashboards y reportes interactivos.
 
 ---
 
@@ -232,4 +373,26 @@ Esta solución demuestra cómo aplicar una arquitectura de medallones para proce
 ### Recursos Adicionales
 - [Documentación de Arquitectura de Medallones - Microsoft Learn](https://learn.microsoft.com/es-es/azure/databricks/lakehouse/medallion-architecture)
 - Capturas y logs detallados están disponibles en el repositorio del proyecto para referencias adicionales.
+- Usar procesamiento incremental (e.g., Change Data Capture o Delta Lake) en lugar de procesar datos completos diariamente.
 
+## Escenarios de riesgo y posibles mitigaciones
+
+### **Si los datos se incrementaran en 100x.**:
+- Migrar a un sistema distribuido como Apache Spark y/o utilizar tecnologías Databricks para manejar el procesamiento de grandes volúmenes de datos
+- Implementar almacenamiento en la nube como Amazon S3, Azure Data Lake o Google Cloud Storage, que son altamente escalables.
+- Particionar las tablas por las columnas más utilizadas en los filtros (p. ej., fecha, región) y aplicar compresión como Parquet o Avro para optimizar el almacenamiento y la lectura.
+
+###  Si las tuberías se ejecutaran diariamente en una ventana de tiempo especifica:
+- Dividir los pipelines en procesos prioritarios y secundarios para optimizar el tiempo.
+- Utilizar herramientas como Apache Spark en modo cluster con procesamiento distribuido.
+- Realizar ETL en pequeñas cargas incrementales (micro-batches) para reducir el tiempo de procesamiento.
+
+###  Si la base de datos necesitara ser accedido por más de 100 usuarios funcionales:
+- Configurar réplicas de lectura en la base de datos para distribuir la carga entre múltiples nodos.
+- Usar caché en memoria para consultas frecuentes o repetitivas.
+- Implementar políticas de acceso basadas en roles (RBAC) para priorizar a ciertos usuarios según sus necesidades funcionales.
+
+###  Si se requiere hacer analítica en tiempo real, ¿cuales componentes cambiaria a suarquitectura propuesta?:
+- Utilizar herramientas de streaming como Apache Kafka para ingestión de datos y Apache Spark Streaming, Flink o Azure Stream Analytics para procesarlos.
+- Integrar herramientas como Power BI con DirectQuery, Tableau o Grafana para visualización dinámica.
+- Usar un clúster autoscalable que aumente recursos bajo demanda para manejar picos de datos.
