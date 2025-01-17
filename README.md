@@ -6,7 +6,7 @@ Datos históricos NBA
 ## Descripción General
 Esta solución fue desarrollada utilizando tecnologías de **Azure Data Lake**, **Azure Data Factory**, y **Jupyter Notebook**, emulando un comportamiento similar al que podría desarrollarse en **Databricks**. Además, **Power BI Desktop** se utilizó para disponibilizar las fuentes de datos y construir el modelo analítico. 
 
-El proyecto emplea **Python** como lenguaje de programación principal, junto con librerías específicas de **PySpark** para el procesamiento distribuido.
+El proyecto emplea **Python** como lenguaje de programación principal.
 
 ---
 
